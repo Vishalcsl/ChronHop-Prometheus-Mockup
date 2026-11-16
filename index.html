@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChronoHop · Your trip, your era</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Cinzel:wght@600;800&family=Cormorant+Garamond:wght@600;700&family=Shippori+Mincho:wght@600;800&family=Space+Grotesk:wght@500;700&family=Rubik:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF8F3;--ink:#08090B;--accent:#CDF22B;--on-accent:#08090B;--card:#FFFFFF;--muted:#5A5C60;--line:rgba(8,9,11,.16);--display:'Inter',system-ui,sans-serif;--radius:16px;--pattern:radial-gradient(rgba(8,9,11,.12) 1px,transparent 1.4px);--psize:26px 26px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);transition:background .6s,color .6s;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:var(--pattern);background-size:var(--psize);opacity:.55;pointer-events:none;z-index:0;transition:opacity .6s}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;letter-spacing:.12em;font-size:11px;font-weight:700;text-transform:uppercase}
+h1,h2,h3,.display{font-family:var(--display);letter-spacing:-.02em;line-height:1.08}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink);transition:background .6s,border-color .6s}
+.bar{display:flex;align-items:center;gap:18px;height:62px}
+.logo{font-family:var(--display);font-weight:800;font-size:21px;display:flex;align-items:center;gap:9px}
+.logo i{width:15px;height:15px;border-radius:50%;background:var(--accent);border:2px solid var(--ink);display:inline-block}
+nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav a{color:var(--ink);text-decoration:none;padding:7px 13px;border-radius:99px;font-weight:600;font-size:14px}
+nav a:hover{background:var(--ink);color:var(--bg)}
+.pill{display:inline-block;background:var(--accent);color:var(--on-accent);padding:6px 12px;border-radius:6px}
+.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--accent);color:var(--on-accent);padding:11px 20px;border-radius:99px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn.sm{padding:7px 14px;font-size:13px;box-shadow:3px 3px 0 var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:var(--radius);box-shadow:6px 6px 0 var(--ink);transition:background .6s,border-color .6s,box-shadow .6s}
+section{padding:54px 0}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.sec-h h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-top:10px}
+.sec-h p{color:var(--muted);max-width:520px}
+.hl{background:linear-gradient(transparent 55%,var(--accent) 55%,var(--accent) 94%,transparent 94%);padding:0 4px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:30px;align-items:center;padding:44px 0 20px}
+.hero h1{font-size:clamp(38px,6vw,68px);font-weight:800;margin:16px 0 14px}
+.hero p{font-size:18px;color:var(--muted);max-width:500px}
+.scene{border-radius:var(--radius);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);overflow:hidden;background:var(--card);aspect-ratio:16/11}
+.scene svg{display:block;width:100%;height:100%}
+.status{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.chip{border:2px solid var(--ink);border-radius:99px;padding:5px 12px;font-size:13px;font-weight:600;background:var(--card)}
+
+/* eras */
+.eras{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.era{cursor:pointer;padding:16px;text-align:left;font:inherit;color:var(--ink);transition:transform .15s}
+.era:hover{transform:translateY(-4px)}
+.era.on{outline:4px solid var(--accent);outline-offset:3px}
+.era .sw{display:flex;gap:5px;margin-bottom:12px}.era .sw i{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink)}
+.era b{font-size:17px;display:block}.era small{color:var(--muted);display:block;margin-top:2px}
+.era .mono{margin-top:10px;display:block;font-size:9.5px;color:var(--muted)}
+
+/* booking */
+.book{display:grid;grid-template-columns:1fr 380px;gap:26px;align-items:start}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.slot{border:2px solid var(--ink);border-radius:14px;padding:13px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+.slot b{font-size:19px;font-family:var(--display)}
+.slot small{font-weight:600}
+.slot.sold{opacity:.42}.slot.held{border-style:dashed}
+.slot.mine{background:var(--accent);color:var(--on-accent)}
+.panel{padding:22px;position:sticky;top:84px}
+.ring{width:150px;height:150px;margin:6px auto 12px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:34px}
+.ring span small{font-family:'Inter';font-size:11px;font-weight:600;color:var(--muted)}
+.pass{border:2px dashed var(--ink);border-radius:14px;padding:16px;margin:12px 0;background:var(--bg)}
+.pass h3{font-size:26px;font-weight:800}
+.bars{height:34px;margin-top:10px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 6px,transparent 6px 10px)}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.log{margin-top:16px;font-size:12.5px;max-height:120px;overflow:auto;border-top:2px solid var(--line);padding-top:10px}
+.log div{padding:2px 0}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.dash .card{padding:20px}
+.dash h3{font-size:19px;font-weight:800;margin:8px 0 10px}
+.dash ul{list-style:none}.dash li{padding:7px 0;border-top:1px solid var(--line);display:flex;gap:9px}
+.dash li::before{content:'';flex:0 0 10px;height:10px;margin-top:7px;border-radius:50%;background:var(--accent);border:2px solid var(--ink)}
+.big{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+
+/* chat */
+.chatgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.chat{padding:0;overflow:hidden;display:flex;flex-direction:column;height:520px}
+.chat-h{padding:14px 18px;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.toggle{display:flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.toggle button{font:inherit;font-size:12.5px;font-weight:700;border:0;background:var(--card);color:var(--ink);padding:6px 12px;cursor:pointer}
+.toggle button.on{background:var(--ink);color:var(--bg)}
+.msgs{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:84%;padding:10px 14px;border-radius:16px;font-size:14.5px;border:2px solid var(--ink)}
+.m.u{align-self:flex-end;background:var(--ink);color:var(--bg);border-bottom-right-radius:4px}
+.m.a{align-self:flex-start;background:var(--card);border-bottom-left-radius:4px}
+.m.bad{background:#FFE1DE;color:#5a0d0b;border-color:#A31C1B}
+.m .why{display:block;margin-top:7px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;opacity:.75;text-transform:uppercase}
+.quick{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:2px solid var(--line)}
+.quick button{font:inherit;font-size:12.5px;font-weight:600;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:99px;padding:5px 11px;cursor:pointer}
+.quick button:hover{background:var(--accent);color:var(--on-accent)}
+.send{display:flex;border-top:2px solid var(--ink)}
+.send input{flex:1;font:inherit;border:0;padding:14px 18px;background:var(--card);color:var(--ink);outline:none}
+.send button{font:inherit;font-weight:800;border:0;border-left:2px solid var(--ink);background:var(--accent);color:var(--on-accent);padding:0 22px;cursor:pointer}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{padding:16px 18px;display:flex;gap:14px}
+.step .n{flex:0 0 36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800}
+.step b{display:block;font-size:16.5px}.step span{color:var(--muted);font-size:14.5px}
+.rules{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:26px}
+.rules .card{padding:20px}.rules h3{font-size:18px;font-weight:800;margin:8px 0}
+.rules li{margin-left:18px;padding:3px 0;font-size:14.5px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}
+.kpis .card{padding:18px}.kpis small{color:var(--muted);display:block;margin-top:6px}
+footer{border-top:2px solid var(--ink);padding:26px 0 40px;color:var(--muted);font-size:13.5px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:99px;font-weight:600;z-index:50;transition:transform .35s;max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+@media(max-width:900px){.hero,.book,.chatgrid{grid-template-columns:1fr}.dash,.rules{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.panel{position:static}nav a{padding:6px 9px;font-size:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="logo"><i></i>ChronoHop</div>
+  <nav><a href="#eras">Pick an era</a><a href="#book">Book</a><a href="#trip">My trip</a><a href="#chat">Chat</a><a href="#fix">Fixing the assistant</a></nav>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <span class="pill mono" id="heroTag">Welcome aboard</span>
+      <h1 id="heroTitle">Pick a moment. We will <span class="hl">dress the place</span> for it.</h1>
+      <p id="heroText">Choose a trip and the whole platform changes to match your era: colours, lettering, pattern and packing list. One seat per departure, held for you while you pay.</p>
+      <div class="status"><span class="chip" id="chipEra">No era picked yet</span><span class="chip" id="chipSeat">No seat held</span><span class="chip" id="chipStyle">House style</span></div>
+    </div>
+    <div class="scene" id="scene"></div>
+  </div>
+
+  <section id="eras">
+    <div class="sec-h"><div><span class="pill mono">Step 1</span><h2>Where, or rather when, are you going?</h2></div><p>Tap a trip. The theme follows your booking, so the platform always feels like your own trip.</p></div>
+    <div class="eras" id="eraGrid"></div>
+  </section>
+
+  <section id="book">
+    <div class="sec-h"><div><span class="pill mono">Step 2</span><h2>One seat, one yes</h2></div><p>Every departure has exactly one seat. Tap Book and it is held for five minutes. Nobody else can be sold it while you pay.</p></div>
+    <div class="book">
+      <div>
+        <div class="slots" id="slots"></div>
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn ghost sm" id="raceBtn">Try it: two people tap at once</button>
+          <button class="btn ghost sm" id="resetBtn">Reset the seats</button>
+        </div>
+        <div class="log" id="log"></div>
+      </div>
+      <div class="card panel" id="panel"></div>
+    </div>
+  </section>
+
+  <section id="trip">
+    <div class="sec-h"><div><span class="pill mono">Step 3</span><h2>My trip</h2></div><p>Your personal dashboard. It fills in as soon as a seat is confirmed.</p></div>
+    <div class="dash" id="dash"></div>
+  </section>
+
+  <section id="chat">
+    <div class="sec-h"><div><span class="pill mono">Help</span><h2>Ask the assistant</h2></div><p>Switch between the assistant from that Saturday and the corrected one. Ask both the same question and compare.</p></div>
+    <div class="chatgrid">
+      <div class="card chat">
+        <div class="chat-h"><b>ChronoHop Assistant</b><div class="toggle"><button id="tOld">That Saturday</button><button id="tNew" class="on">Corrected</button></div></div>
+        <div class="msgs" id="msgs"></div>
+        <div class="quick" id="quick"></div>
+        <form class="send" id="sendForm"><input id="inp" placeholder="Type a question" autocomplete="off"><button>Send</button></form>
+      </div>
+      <div class="steps" id="howAnswers">
+        <div class="card step"><div class="n">1</div><div><b>It looks things up, it does not guess</b><span>Every answer about a seat or a booking is read from the Seat Book, the same list the Book button uses. Try booking a seat and then asking about it.</span></div></div>
+        <div class="card step"><div class="n">2</div><div><b>It never says "guaranteed"</b><span>Words like guaranteed, promise and definitely are blocked before the message is sent. Only a paid, confirmed booking counts as a promise.</span></div></div>
+        <div class="card step"><div class="n">3</div><div><b>It is allowed to say "I am not sure"</b><span>Money, refunds and anything it cannot look up go to a person, with a ticket number and a time by which someone will reply.</span></div></div>
+        <div class="card step"><div class="n">4</div><div><b>It can say "we have not decided yet"</b><span>If the company has no answer yet, as with the $2 price, it says so and waits for the official statement. It never makes up a policy.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fix">
+    <div class="sec-h"><div><span class="pill mono">Our approach</span><h2>How we would correct the Artificial Intelligence (AI) chat assistant</h2></div><p>The assistant was not broken because it was unkind. It was broken because it was confident without facts. So we fix what it knows, what it may say, and what happens when it does not know.</p></div>
+    <div class="steps">
+      <div class="card step"><div class="n">1</div><div><b>Find out what really went wrong</b><span>Read the chats from that morning. Sort every wrong answer into three piles: it guessed a fact, it invented a policy, or it should have handed over. This tells us which fix matters most.</span></div></div>
+      <div class="card step"><div class="n">2</div><div><b>Connect it to live facts</b><span>Give it read-only access to the Seat Book, the customer's own booking and the price list. If the fact is not there, the honest answer is "I cannot see that".</span></div></div>
+      <div class="card step"><div class="n">3</div><div><b>Write a one-page rulebook</b><span>What it may answer alone, what it must hand to a person, and what it must never say. Signed off by support, legal and the founder before any sale.</span></div></div>
+      <div class="card step"><div class="n">4</div><div><b>Add a safety check on every reply</b><span>A second, simple check reads each message before it is sent. If it contains a promise, a price or a refund amount that did not come from the system, the message is replaced with a handover.</span></div></div>
+      <div class="card step"><div class="n">5</div><div><b>Make handover fast and human</b><span>One tap to a person, with the chat history attached and a clear wait time. When chat volume passes five times normal, the assistant switches to a short holding message and a queue.</span></div></div>
+      <div class="card step"><div class="n">6</div><div><b>Test before every sale, then keep watching</b><span>Thirty trick questions, including five about things that have never happened. It goes live only with zero promises. After launch, a person reviews a sample of chats every week and support leads have a one-click off switch.</span></div></div>
+    </div>
+    <div class="rules">
+      <div class="card"><span class="mono">Answers alone</span><h3>Safe to answer</h3><ul><li>Is this departure free, held or sold?</li><li>What is the status of my booking?</li><li>What should I pack?</li><li>How does the five minute hold work?</li></ul></div>
+      <div class="card"><span class="mono">Hands to a person</span><h3>Always a human</h3><ul><li>Refunds and compensation</li><li>Price disputes and special deals</li><li>Complaints and safety worries</li><li>Anything it cannot look up</li></ul></div>
+      <div class="card"><span class="mono">Never says</span><h3>Off limits</h3><ul><li>"Guaranteed", "I promise", "definitely"</li><li>A price that is not on the price list</li><li>A policy the company has not published</li><li>That a held seat is confirmed</li></ul></div>
+    </div>
+    <div class="kpis">
+      <div class="card"><div class="big">0</div><small>promises the system cannot back up</small></div>
+      <div class="card"><div class="big">100%</div><small>of money questions handed to a person</small></div>
+      <div class="card"><div class="big">2 min</div><small>target wait for a human during a sale</small></div>
+      <div class="card"><div class="big">30 / 30</div><small>trick questions passed before go-live</small></div>
+    </div>
+  </section>
+</div>
+<footer><div class="wrap">ChronoHop is a fictional company from a product case. This is an interactive mockup: seats, payments and chat replies are simulated in your browser and nothing is stored or sent anywhere.</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const ERAS = {
+  house:{name:'House style',when:'',style:'House style',bg:'#FAF8F3',ink:'#08090B',accent:'#CDF22B',on:'#08090B',card:'#FFFFFF',muted:'#5A5C60',display:"'Inter',sans-serif",
+    pattern:'radial-gradient(rgba(8,9,11,.12) 1px,transparent 1.4px)',psize:'26px 26px'},
+  dino:{name:'Dinosaur Walk',when:'65 million years ago',place:'Late Cretaceous',style:'Shadow puppet',price:2000,bg:'#0E1A13',ink:'#EAF3DC',accent:'#CDF22B',on:'#0E1A13',card:'#16271D',muted:'#9DB39F',display:"'Rubik',sans-serif",
+    pattern:'radial-gradient(ellipse at 50% 0,rgba(205,242,43,.16) 0 30%,transparent 31%)',psize:'46px 34px',
+    hello:'Mind the ferns. And the footprints.',pack:['Sturdy boots, the ground is soft','Insect repellent, the big kind','No snacks in pockets','Camera with the flash off']},
+  egypt:{name:'Building the Great Pyramid',when:'2560 BC',place:'Giza',style:'Paper cut-out',price:1800,bg:'#F3E3BF',ink:'#2B1B0E',accent:'#1F6F8B',on:'#FFF7E2',card:'#FBF1D8',muted:'#7A6243',display:"'Cinzel',serif",
+    pattern:'linear-gradient(135deg,rgba(200,150,46,.22) 25%,transparent 25%),linear-gradient(225deg,rgba(200,150,46,.22) 25%,transparent 25%)',psize:'40px 40px',
+    hello:'The stone arrives at dawn. So do you.',pack:['Linen layers and a wide hat','Two litres of water','Sandals you can walk in','Do not offer to help carry']},
+  rome:{name:'Opening Day at the Colosseum',when:'80 AD',place:'Rome',style:'Roman mosaic',price:1600,bg:'#F4EDE4',ink:'#3A0D0D',accent:'#A31C1B',on:'#FFF4E8',card:'#FFFAF3',muted:'#7B5B50',display:"'Cinzel',serif",
+    pattern:'linear-gradient(rgba(58,13,13,.14) 2px,transparent 2px),linear-gradient(90deg,rgba(58,13,13,.14) 2px,transparent 2px)',psize:'22px 22px',
+    hello:'Fifty thousand seats. You still get only one.',pack:['A cushion, the marble is hard','Coins are not needed, entry is free','A cloak for the afternoon shade','Thumbs neutral, please']},
+  agra:{name:'The Taj Mahal, just finished',when:'1648',place:'Agra',style:'Miniature painting',price:1700,bg:'#FBF3E7',ink:'#1F2A44',accent:'#0F7B6C',on:'#FDF6EA',card:'#FFFDF8',muted:'#6B6F82',display:"'Cormorant Garamond',serif",
+    pattern:'radial-gradient(circle at 50% 50%,transparent 9px,rgba(194,24,91,.16) 10px,transparent 11px)',psize:'30px 30px',
+    hello:'The marble is still warm from the polish.',pack:['Shoes that slip off easily','A light shawl for the gardens','Arrive before sunrise for the pink light','Look, do not touch the inlay']},
+  edo:{name:'Edo under the Great Wave',when:'1831',place:'Edo, Japan',style:'Ukiyo-e',price:1900,bg:'#F5EFE0',ink:'#1B2A49',accent:'#D9432F',on:'#FFF6EA',card:'#FFFBF2',muted:'#62708A',display:"'Shippori Mincho',serif",
+    pattern:'radial-gradient(circle at 50% 100%,transparent 11px,rgba(27,42,73,.18) 12px,transparent 13px),radial-gradient(circle at 0 50%,transparent 11px,rgba(27,42,73,.12) 12px,transparent 13px)',psize:'28px 20px',
+    hello:'The print shop opens at eight. The sea does not wait.',pack:['Straw sandals and a paper umbrella','Small gifts for your hosts','Bow first, speak second','Stay well back from the shoreline']},
+  apollo:{name:'First Steps on the Moon',when:'20 July 1969',place:'Sea of Tranquility',style:'Blueprint',price:2400,bg:'#0B0D17',ink:'#E8ECF4',accent:'#FFB703',on:'#0B0D17',card:'#141829',muted:'#8E97B3',display:"'Space Grotesk',sans-serif",
+    pattern:'radial-gradient(rgba(232,236,244,.5) 1px,transparent 1.3px),radial-gradient(rgba(232,236,244,.25) 1px,transparent 1.3px)',psize:'70px 70px, 37px 37px',
+    hello:'One small hop for you.',pack:['Pod suit is provided, wear thin layers','Nothing loose, gravity is one sixth','Viewing is from the ridge only','Wave back if he waves']}
+};
+const SCENES = {
+  house:c=>`<rect width="640" height="440" fill="${c.card}"/><circle cx="320" cy="210" r="120" fill="none" stroke="${c.ink}" stroke-width="3" stroke-dasharray="6 9"/><circle cx="320" cy="210" r="70" fill="${c.accent}" stroke="${c.ink}" stroke-width="3"/><path d="M320 160V210L352 232" fill="none" stroke="${c.ink}" stroke-width="7" stroke-linecap="round"/><text x="320" y="390" text-anchor="middle" font-family="JetBrains Mono" font-weight="700" font-size="14" letter-spacing="3" fill="${c.ink}">PICK AN ERA TO BEGIN</text>`,
+  dino:c=>`<rect width="640" height="440" fill="#12241A"/><circle cx="500" cy="110" r="60" fill="${c.accent}" opacity=".9"/><path d="M0 330 Q160 270 320 320 T640 300 V440 H0Z" fill="#0A130E"/><g fill="#050A07"><ellipse cx="300" cy="270" rx="118" ry="60"/><path d="M205 240 C170 225 135 190 112 150 C104 136 114 126 126 128 C138 130 144 140 150 152 C170 190 200 215 232 228Z"/><path d="M124 136 C108 128 88 130 80 138 C74 144 78 152 86 154 C100 158 116 154 128 146Z"/><path d="M400 252 C460 236 520 232 580 242 C588 244 588 254 580 256 C520 268 465 286 412 304Z"/><rect x="232" y="310" width="30" height="62"/><rect x="278" y="312" width="26" height="58"/><rect x="336" y="312" width="30" height="60"/><rect x="380" y="308" width="26" height="60"/></g><circle cx="98" cy="142" r="4" fill="${c.accent}"/><g fill="#0A130E"><path d="M40 440 Q50 330 30 300 Q70 340 62 440Z"/><path d="M590 440 Q600 350 620 320 Q612 380 616 440Z"/></g>`,
+  egypt:c=>`<rect width="640" height="440" fill="#F7D79A"/><circle cx="470" cy="130" r="64" fill="#E9A23B"/><path d="M120 360 L300 110 L480 360Z" fill="#C8962E"/><path d="M300 110 L480 360 L360 360Z" fill="#A87A20"/><path d="M380 360 L490 210 L600 360Z" fill="#D6A84A"/><path d="M490 210 L600 360 L530 360Z" fill="#B58A2C"/><rect y="358" width="640" height="82" fill="#E6C27A"/><g fill="${c.accent}"><rect x="60" y="330" width="14" height="34"/><circle cx="67" cy="322" r="8"/><rect x="92" y="336" width="14" height="28"/><circle cx="99" cy="328" r="8"/></g><rect x="50" y="364" width="80" height="12" fill="#2B1B0E"/>`,
+  rome:c=>`<rect width="640" height="440" fill="#F1E1CF"/><g fill="${c.ink}"><path d="M90 360 V190 Q320 110 550 190 V360Z"/></g><g fill="#F1E1CF">${[0,1,2,3,4,5,6].map(i=>`<path d="M${118+i*60} 350 V300 a20 20 0 0 1 40 0 V350Z"/><path d="M${118+i*60} 270 V236 a20 20 0 0 1 40 0 V270Z"/>`).join('')}</g><rect y="358" width="640" height="82" fill="${c.accent}"/><g fill="#F1E1CF" opacity=".5">${Array.from({length:16},(_,i)=>`<rect x="${i*40+6}" y="372" width="26" height="26"/>`).join('')}</g><circle cx="540" cy="90" r="40" fill="#E0B45A"/>`,
+  agra:c=>`<rect width="640" height="440" fill="#FBE4D2"/><circle cx="320" cy="120" r="150" fill="#F7C9B8" opacity=".7"/><g fill="#FFFDF8" stroke="${c.ink}" stroke-width="3"><rect x="200" y="230" width="240" height="130"/><path d="M270 230 C250 170 290 130 320 110 C350 130 390 170 370 230Z"/><rect x="120" y="170" width="26" height="190"/><rect x="494" y="170" width="26" height="190"/><path d="M120 170 q13 -30 26 0Z"/><path d="M494 170 q13 -30 26 0Z"/><path d="M296 360 V300 a24 30 0 0 1 48 0 V360Z" fill="${c.accent}"/></g><line x1="320" y1="110" x2="320" y2="84" stroke="${c.ink}" stroke-width="3"/><rect y="360" width="640" height="80" fill="${c.accent}"/><rect x="280" y="372" width="80" height="68" fill="#9ED3CB"/>`,
+  edo:c=>`<rect width="640" height="440" fill="#F2E6CC"/><circle cx="480" cy="120" r="56" fill="${c.accent}"/><path d="M360 300 L450 170 L470 190 L490 170 L580 300Z" fill="#DCE3EA" stroke="${c.ink}" stroke-width="3"/><path d="M0 300 C60 200 170 150 250 190 C300 215 300 280 250 280 C290 300 330 290 350 250 C340 340 260 380 160 372 C80 366 30 340 0 360Z" fill="${c.ink}"/><g fill="#F2E6CC"><circle cx="258" cy="196" r="9"/><circle cx="282" cy="214" r="8"/><circle cx="296" cy="240" r="7"/><circle cx="236" cy="186" r="8"/></g><path d="M0 360 Q160 330 320 370 T640 350 V440 H0Z" fill="#32507F"/>`,
+  apollo:c=>`<rect width="640" height="440" fill="#070912"/>${Array.from({length:40},(_,i)=>`<circle cx="${(i*97)%640}" cy="${(i*53)%260}" r="${i%3?1:1.8}" fill="#E8ECF4"/>`).join('')}<circle cx="520" cy="100" r="46" fill="#3C6FB8"/><path d="M490 90 q20 -20 46 -6 q-10 20 -30 22Z" fill="#6FB07A"/><path d="M0 340 Q320 280 640 340 V440 H0Z" fill="#8E97B3"/><g fill="#6E7794"><ellipse cx="120" cy="372" rx="40" ry="10"/><ellipse cx="470" cy="392" rx="56" ry="12"/></g><g stroke="${c.accent}" stroke-width="4" fill="none"><path d="M280 330 L260 366 M360 330 L380 366"/></g><rect x="278" y="270" width="84" height="60" fill="${c.accent}"/><rect x="296" y="236" width="48" height="36" fill="#E8ECF4"/><line x1="320" y1="236" x2="320" y2="206" stroke="#E8ECF4" stroke-width="3"/><circle cx="320" cy="202" r="6" fill="${c.accent}"/>`
+};
+const TIMES=['7:00 AM','7:30 AM','8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM'];
+const S={era:'house',slots:{},held:null,confirmed:null,left:0,timer:null,mode:'new',ticket:1040};
+const $=id=>document.getElementById(id);
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)}
+function log(t){const d=document.createElement('div');d.textContent=new Date().toLocaleTimeString()+'  '+t;$('log').prepend(d)}
+function seed(era){ if(!S.slots[era]) S.slots[era]=TIMES.map((t,i)=>({t,st:(i===2||i===5)?'sold':'free'})); return S.slots[era]}
+
+function applyTheme(k){
+  const c=ERAS[k], r=document.documentElement.style;
+  r.setProperty('--bg',c.bg);r.setProperty('--ink',c.ink);r.setProperty('--accent',c.accent);r.setProperty('--on-accent',c.on);r.setProperty('--card',c.card);
+  r.setProperty('--muted',c.muted);r.setProperty('--display',c.display);r.setProperty('--pattern',c.pattern);r.setProperty('--psize',c.psize);
+  r.setProperty('--line',k==='dino'||k==='apollo'?'rgba(255,255,255,.18)':'rgba(8,9,11,.16)');
+  $('scene').innerHTML=`<svg viewBox="0 0 640 440" preserveAspectRatio="xMidYMid slice">${SCENES[k](c)}</svg>`;
+  if(k==='house'){ $('heroTag').textContent='Welcome aboard'; $('heroTitle').innerHTML='Pick a moment. We will <span class="hl">dress the place</span> for it.'; $('chipEra').textContent='No era picked yet'; }
+  else { $('heroTag').textContent=c.when+' · '+c.place; $('heroTitle').innerHTML=c.name.replace(/(\S+)$/,'<span class="hl">$1</span>'); $('heroText').textContent=c.hello+' Your platform now wears the '+c.style.toLowerCase()+' look for this trip.'; $('chipEra').textContent=c.name; }
+  $('chipStyle').textContent='Style: '+c.style;
+}
+function renderEras(){
+  $('eraGrid').innerHTML=Object.entries(ERAS).filter(([k])=>k!=='house').map(([k,c])=>`<button class="card era ${S.era===k?'on':''}" data-k="${k}" style="background:${c.bg};color:${c.ink};border-color:${c.ink};box-shadow:6px 6px 0 ${c.ink}">
+    <span class="sw"><i style="background:${c.accent};border-color:${c.ink}"></i><i style="background:${c.ink};border-color:${c.ink}"></i><i style="background:${c.card};border-color:${c.ink}"></i></span>
+    <b style="font-family:${c.display}">${c.name}</b><small style="color:${c.muted}">${c.when}</small><span class="mono" style="color:${c.muted}">${c.style}</span></button>`).join('');
+  document.querySelectorAll('.era').forEach(b=>b.onclick=()=>pickEra(b.dataset.k));
+}
+function pickEra(k){
+  if(S.held){ toast('Finish or release your held seat first.'); return; }
+  S.era=k; seed(k); applyTheme(k); renderEras(); renderSlots(); renderPanel(); renderDash();
+  $('chipSeat').textContent=(S.confirmed&&S.confirmed.era===k)?'Confirmed: '+S.confirmed.t:'No seat held';
+  try{localStorage.setItem('ch_era',k)}catch(e){}
+  toast('Theme changed to '+ERAS[k].style+' for '+ERAS[k].name);
+}
+function renderSlots(){
+  if(S.era==='house'){ $('slots').innerHTML='<div class="slot" style="grid-column:1/-1"><b>Pick an era first</b><small>Departures appear here.</small></div>'; return; }
+  $('slots').innerHTML=seed(S.era).map((s,i)=>{
+    const mine=(S.held&&S.held.i===i&&S.held.era===S.era)||(S.confirmed&&S.confirmed.i===i&&S.confirmed.era===S.era);
+    const lbl=s.st==='free'?'1 seat free':s.st==='held'?(mine?'Held for you':'Held by someone'):(mine?'Yours, confirmed':'Sold out');
+    return `<div class="slot ${s.st} ${mine?'mine':''}"><b>${s.t}</b><small>${lbl}</small>${s.st==='free'?`<button class="btn sm" data-i="${i}">Book</button>`:''}</div>`}).join('');
+  document.querySelectorAll('#slots .btn').forEach(b=>b.onclick=()=>hold(+b.dataset.i));
+}
+function hold(i){
+  const sl=seed(S.era);
+  if(S.held){ toast('You already hold a seat. Pay for it or release it.'); return; }
+  if(S.confirmed&&S.confirmed.era===S.era){ toast('You already have a confirmed seat on this trip.'); return; }
+  if(sl[i].st!=='free'){ missed(i); return; }           // the Seat Book decides, not the page
+  sl[i].st='held'; S.held={era:S.era,i,t:sl[i].t}; S.left=300; log('Seat Book: '+sl[i].t+' held for you.');
+  clearInterval(S.timer); S.timer=setInterval(()=>{S.left--; if(S.left<=0) release(true); else tick();},1000);
+  $('chipSeat').textContent='Held: '+sl[i].t; renderSlots(); renderPanel();
+}
+function nextFree(i){const sl=seed(S.era); for(let j=i+1;j<sl.length;j++) if(sl[j].st==='free') return j; for(let j=0;j<i;j++) if(sl[j].st==='free') return j; return -1}
+function missed(i){
+  const sl=seed(S.era), n=nextFree(i);
+  $('panel').innerHTML=`<span class="mono">Just missed it</span><h3 class="display" style="font-size:26px;margin:10px 0">${sl[i].t} went a second ago</h3><p class="note">One seat per departure, so it goes to whoever tapped first. You were not charged and no email was sent.</p>
+  ${n>=0?`<div class="pass"><span class="mono">Next free seat</span><h3>${sl[n].t}</h3><span class="note">Same spot, a little later</span></div><button class="btn" id="holdNext">Hold ${sl[n].t}</button>`:'<p class="note">Every departure for this sale is taken. The sale ends when the seats end.</p>'}`;
+  if(n>=0) $('holdNext').onclick=()=>hold(n);
+}
+function release(expired){
+  if(!S.held) return; seed(S.held.era)[S.held.i].st='free'; log('Seat Book: '+S.held.t+(expired?' hold ran out, back on sale.':' released, back on sale.'));
+  clearInterval(S.timer); S.held=null; $('chipSeat').textContent='No seat held'; renderSlots(); renderPanel(); if(expired) toast('Your hold ran out. The seat is back on sale.');
+}
+function pay(){
+  const h=S.held; if(!h) return; clearInterval(S.timer); seed(h.era)[h.i].st='sold';
+  S.confirmed={era:h.era,i:h.i,t:h.t,ref:'CH-'+Math.random().toString(36).slice(2,6).toUpperCase()+'-01'}; S.held=null;
+  log('Payment received. Seat Book: '+h.t+' sold. Confirmation email sent now.'); $('chipSeat').textContent='Confirmed: '+h.t; renderSlots(); renderPanel(); renderDash(); toast('Confirmed. This one is a promise.');
+}
+function tick(){const e=$('cd'); if(!e) return; const m=Math.floor(S.left/60), s=String(S.left%60).padStart(2,'0'); e.firstChild.textContent=m+':'+s; $('arc').setAttribute('stroke-dashoffset', 408*(1-S.left/300));}
+function renderPanel(){
+  const c=ERAS[S.era];
+  if(S.held){
+    $('panel').innerHTML=`<span class="mono">Seat held for you</span><div class="ring"><svg width="150" height="150"><circle cx="75" cy="75" r="65" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="arc" cx="75" cy="75" r="65" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="408" stroke-dashoffset="0"/></svg><span id="cd">5:00<small>left to pay</small></span></div>
+    <b>${c.name}</b><div class="note">${S.held.t} · Pod 01 · Seat 1 of 1<br>Off sale while you pay. Held is not confirmed yet.</div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn" id="payBtn">Pay $${c.price.toLocaleString()}</button><button class="btn ghost" id="relBtn">Release</button></div>`;
+    $('payBtn').onclick=pay; $('relBtn').onclick=()=>release(false); tick();
+  } else if(S.confirmed&&S.confirmed.era===S.era){
+    $('panel').innerHTML=`<span class="mono">Confirmed</span><div class="pass"><span class="mono">Boarding pass</span><h3>POD 01</h3><b>${c.name}</b><div class="note">Seat 1 of 1 · ${S.confirmed.t}<br>${c.when} · Ref ${S.confirmed.ref}</div><div class="bars"></div></div><p class="note">The email went out when the payment cleared, not a second earlier.</p>`;
+  } else {
+    $('panel').innerHTML=`<span class="mono">How it works</span><h3 class="display" style="font-size:24px;margin:10px 0">Hold, pay, then yes</h3><p class="note">1. Tap Book. The seat is yours for five minutes.<br>2. Pay. Only then do we say Confirmed.<br>3. If someone beat you to it, we show the next free seat. No charge, no false yes.</p>`;
+  }
+}
+function race(){
+  if(S.era==='house'){ toast('Pick an era first.'); return; } if(S.held){ toast('Release your held seat to run the race.'); return; }
+  const sl=seed(S.era), i=sl.findIndex(s=>s.st==='free'); if(i<0){ toast('No free seats left. Reset the seats.'); return; }
+  sl[i].st='held'; log('Two taps on '+sl[i].t+' in the same instant. Seat Book gave it to the other tourist.'); renderSlots(); missed(i);
+  setTimeout(()=>{ if(sl[i].st==='held'){ sl[i].st='sold'; log('The other tourist paid. '+sl[i].t+' sold.'); renderSlots(); } },4000);
+}
+function renderDash(){
+  const c=ERAS[S.era], ok=S.confirmed&&S.confirmed.era===S.era;
+  if(S.era==='house'){ $('dash').innerHTML='<div class="card" style="grid-column:1/-1"><h3>Nothing here yet</h3><p class="note">Pick an era and confirm a seat. Your dashboard will dress itself for the trip.</p></div>'; return; }
+  $('dash').innerHTML=`<div class="card"><span class="mono">Your departure</span><h3>${ok?S.confirmed.t:'Not booked yet'}</h3><div class="big">${ok?'Confirmed':'Open'}</div><p class="note">${ok?'Ref '+S.confirmed.ref+' · Pod 01 · Seat 1 of 1':'Book a seat above and it shows up here.'}</p></div>
+  <div class="card"><span class="mono">Packing for ${c.when}</span><h3>What to bring</h3><ul>${c.pack.map(p=>`<li>${p}</li>`).join('')}</ul></div>
+  <div class="card"><span class="mono">Your theme</span><h3>${c.style}</h3><p class="note">${c.hello}</p><p class="note">The platform keeps this look until your trip is over, then returns to the house style.</p><button class="btn ghost sm" style="margin-top:14px" id="houseBtn">Back to house style</button></div>`;
+  $('houseBtn').onclick=()=>pickEra('house');
+}
+
+/* ---------- chat ---------- */
+const QUICK=['Is my trip guaranteed?','Can I still get the $2 price?','Is 7:00 AM free?','I want a refund','What should I pack?','How long is my seat held?'];
+function say(t,cls,why){const d=document.createElement('div');d.className='m '+cls;d.textContent=t;if(why){const w=document.createElement('span');w.className='why';w.textContent=why;d.appendChild(w)}$('msgs').appendChild(d);$('msgs').scrollTop=1e6}
+const BANNED=/guarantee|promise|definitely|100%/i;
+function fixedAnswer(q){
+  const c=ERAS[S.era], sl=S.era==='house'?null:seed(S.era), l=q.toLowerCase(); let a, why;
+  if(/guarant|promise|sure.*trip|definitely/.test(l)){
+    if(S.confirmed) { a='Your booking '+S.confirmed.ref+' for '+S.confirmed.t+' shows as Confirmed and paid in the Seat Book. That is the only kind of yes we give.'; why='Read from the Seat Book'; }
+    else if(S.held){ a='You are holding '+S.held.t+' right now, but a held seat is not confirmed until you pay. I cannot call it certain before that.'; why='Read from the Seat Book'; }
+    else { a='I cannot see a booking for you, so I am not able to tell you a trip is certain. I can check a departure for you, or pass you to a person.'; why='Rule: never promise without a confirmed booking'; }
+  } else if(/\$ ?2\b|two dollar|cheap price|wrong price|sale price/.test(l)){
+    a='We have not announced a decision on that price yet, so I am not going to guess. A person will reply within 15 minutes. Your ticket is #'+(S.ticket++)+'.'; why='No company position yet · handed to a person';
+  } else if(/refund|money back|compensat|charge/.test(l)){
+    a='Refunds are handled by a person, not by me. I have passed your chat on with ticket #'+(S.ticket++)+'. Current wait is about 2 minutes.'; why='Rule: money goes to a person';
+  } else if(/(\d{1,2}):?(\d{2})?\s*(am|pm)?.*(free|available|open|left)|free|available/.test(l)){
+    if(!sl){ a='Pick an era first and I can look up its departures for you.'; why='Nothing to look up yet'; }
+    else { const m=l.match(/(\d{1,2}):(\d{2})/); const s=m?sl.find(x=>x.t.startsWith(m[1]+':'+m[2])):null;
+      if(s){ a=c.name+' at '+s.t+' is '+(s.st==='free'?'free right now. There is one seat, so it goes to the first person who taps Book.':s.st==='held'?'being held by someone who is paying. If they do not finish in five minutes it comes back on sale.':'sold out.'); }
+      else { const f=sl.filter(x=>x.st==='free').map(x=>x.t); a=f.length?'Free departures for '+c.name+' right now: '+f.join(', ')+'.':'Every departure for '+c.name+' is taken.'; }
+      why='Read from the Seat Book'; }
+  } else if(/pack|bring|wear/.test(l)){
+    a=S.era==='house'?'Tell me your era and I will share its packing list.':'For '+c.name+': '+c.pack.join('. ')+'.'; why='Read from the trip guide';
+  } else if(/hold|held|how long|timer|minutes/.test(l)){
+    a='A seat is held for five minutes from the moment you tap Book. Pay inside that time and it is confirmed. If not, it goes back on sale.'; why='Read from the booking rules';
+  } else { a='I am not sure about that one, and I would rather not guess. I have passed it to a person with ticket #'+(S.ticket++)+'.'; why='Not sure · handed to a person'; }
+  if(BANNED.test(a)){ a='I would rather have a person answer that. Ticket #'+(S.ticket++)+' is open.'; why='Blocked by the safety check'; }
+  return [a,why];
+}
+function ask(q){
+  if(!q.trim()) return; say(q,'u');
+  setTimeout(()=>{ if(S.mode==='old') say('Yes! Do not worry, your trip is 100% guaranteed. Everything is confirmed!','a bad','No lookup · no rules · said to everyone');
+    else { const [a,w]=fixedAnswer(q); say(a,'a',w); } },380);
+}
+function setMode(m){S.mode=m;$('tOld').classList.toggle('on',m==='old');$('tNew').classList.toggle('on',m==='new');$('msgs').innerHTML='';
+  say(m==='old'?'Hi! I am the brand new assistant. Ask me anything!':'Hello. I can look up seats and bookings for you. For money questions I will bring in a person.','a'+(m==='old'?' bad':''));}
+$('quick').innerHTML=QUICK.map(q=>`<button type="button">${q}</button>`).join('');
+document.querySelectorAll('#quick button').forEach(b=>b.onclick=()=>ask(b.textContent));
+$('sendForm').onsubmit=e=>{e.preventDefault();ask($('inp').value);$('inp').value=''};
+$('tOld').onclick=()=>setMode('old'); $('tNew').onclick=()=>setMode('new');
+$('raceBtn').onclick=race;
+$('resetBtn').onclick=()=>{ if(S.held) release(false); S.slots={}; S.confirmed=null; $('chipSeat').textContent='No seat held'; $('log').innerHTML=''; renderSlots(); renderPanel(); renderDash(); toast('Seats reset.'); };
+
+let start='house'; try{const k=localStorage.getItem('ch_era'); if(k&&ERAS[k]) start=k}catch(e){}
+S.era=start; if(start!=='house') seed(start);
+applyTheme(start); renderEras(); renderSlots(); renderPanel(); renderDash(); setMode('new');
+</script>
+</body>
+</html>
